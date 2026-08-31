@@ -18,7 +18,7 @@ export default function Hero() {
         className="relative mx-auto flex min-h-[calc(100dvh-88px)] max-w-7xl items-center px-4 py-6 sm:px-6 sm:py-6 md:px-10 lg:px-16 xl:max-w-[90rem] xl:px-20 2xl:max-w-[110rem] 2xl:px-28"
       >
         <div className="grid w-full items-center gap-6 sm:gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 xl:grid-cols-[1fr_1fr] xl:gap-16 2xl:gap-24">
-          {/* Text Content */}
+         
           <div className="order-2 lg:order-1">
             <p
               className="font-mono text-[10px] uppercase tracking-[0.18em] xs:text-xs sm:text-sm xl:text-base 2xl:text-lg"
@@ -41,7 +41,7 @@ export default function Hero() {
               I make the complex simple.
             </p>
 
-            {/* Buttons — wrap naturally on small screens */}
+            
             <div className="mt-4 flex flex-wrap gap-2.5 sm:mt-7 sm:gap-3 xl:mt-10">
               <a
                 href="#projects"
@@ -65,14 +65,14 @@ export default function Hero() {
               </a>
             </div>
 
-            {/* Contact details — subtle on mobile, more visible on larger */}
+          
             
           </div>
 
-          {/* Portrait Image */}
+         
           <div className="order-1 flex justify-center lg:order-2 lg:justify-end">
             <div className="relative aspect-[4/5] w-full max-w-[220px] xs:max-w-[260px] sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-2xl">
-              {/* Background glow — scales with viewport */}
+              
               <div
                 className="absolute -inset-3 -z-10 rounded-[1.5rem] blur-2xl xs:-inset-4 xs:rounded-[2rem] sm:-inset-6 sm:rounded-[3rem] sm:blur-3xl xl:-inset-10 2xl:-inset-14"
                 style={{
@@ -91,7 +91,7 @@ export default function Hero() {
                   sizes="(max-width: 375px) 220px, (max-width: 480px) 260px, (max-width: 640px) 320px, (max-width: 768px) 384px, (max-width: 1024px) 384px, (max-width: 1280px) 448px, (max-width: 1536px) 576px, 672px"
                   className="object-cover object-top grayscale-[5%]"
                 />
-                {/* Bottom gradient overlay */}
+              
                 <div
                   className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"
                   aria-hidden="true"
