@@ -1,4 +1,5 @@
 const PAGE_BG = "#0d151d";
+const BRIDGERTON_BLUE = "#95c1ee";
 const CONTACT_BLUE = "#5B8DB8";
 
 type SkillCategory = {
@@ -13,7 +14,7 @@ const SKILLS: SkillCategory[] = [
   },
   {
     title: "Frameworks",
-    skills: ["React", "Next.js","Django", "REST APIs", "Node.js", "WebSockets"],
+    skills: ["React", "Next.js", "Django", "REST APIs", "Node.js", "WebSockets"],
   },
   {
     title: "Databases & Data",
@@ -21,24 +22,11 @@ const SKILLS: SkillCategory[] = [
   },
   {
     title: "DevOps & Cloud",
-    skills: [
-      "CI/CD",
-      "GitHub Actions",
-      "Heroku",
-      "Vercel",
-      "Netlify"
-    ],
+    skills: ["CI/CD", "GitHub Actions", "Heroku", "Vercel", "Netlify"],
   },
   {
     title: "Tools & Design",
-    skills: [
-      "Figma",
-      "Adobe Illustrator",
-      "Onshape CAD",
-      "Postman",
-      "Jira",
-      "ClickUp",
-    ],
+    skills: ["Figma", "Adobe Illustrator", "Onshape CAD", "Postman", "Jira", "ClickUp"],
   },
   {
     title: "IoT & Hardware",
@@ -67,7 +55,7 @@ export default function Skills() {
           <div
             key={category.title}
             className="rounded-2xl border p-6 sm:p-8 xl:rounded-3xl xl:p-10"
-            style={{ backgroundColor: "white", borderColor: "#e5e5e5" }}
+            style={{ backgroundColor: PAGE_BG, borderColor: PAGE_BG }}
           >
             <p
               className="font-mono text-xs font-bold uppercase tracking-[0.2em] xl:text-sm"
@@ -80,11 +68,10 @@ export default function Skills() {
               {category.skills.map((skill) => (
                 <span
                   key={skill}
-                  className="rounded-full border px-3.5 py-1.5 font-body text-xs xl:px-4 xl:py-2 xl:text-sm"
+                  className="rounded-full px-3.5 py-1.5 font-body text-xs xl:px-4 xl:py-2 xl:text-sm"
                   style={{
-                    backgroundColor: "rgba(149, 193, 238, 0.10)",
-                    borderColor: "rgba(149, 193, 238, 0.35)",
-                    color: PAGE_BG,
+                    backgroundColor: "rgba(149, 193, 238, 0.12)",
+                    color: BRIDGERTON_BLUE,
                   }}
                 >
                   {skill}
