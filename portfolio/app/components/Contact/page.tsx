@@ -155,7 +155,7 @@ export default function Contact() {
                 {method.value}
               </span>
 
-              <span className="mt-0.5 block font-body text-xs text-gray-500 xl:text-sm">
+              <span className="mt-0.5 block font-body text-xs text-gray-400 xl:text-sm">
                 {method.label}
               </span>
             </span>

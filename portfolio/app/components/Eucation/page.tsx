@@ -86,7 +86,7 @@ export default function Education() {
             </p>
 
             {entry.description && (
-              <p className="mt-5 max-w-3xl font-body text-sm leading-relaxed text-gray-300 sm:text-base xl:mt-6 xl:text-base">
+              <p className="mt-5 max-w-3xl font-body text-sm leading-relaxed text-gray-400 sm:text-base xl:mt-6 xl:text-base">
                 {entry.description}
               </p>
             )}

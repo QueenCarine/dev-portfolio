@@ -4,6 +4,7 @@ import Education from "./components/Eucation/page";
 import Projects from "./components/Projects/page";
 import Skills from "./components/Skills/page";
 import Contact from "./components/Contact/page";
+import About from "./components/About/page";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,_rgba(62,207,142,0.08),_transparent_45%)]" />
       <Navbar />
       <Hero />
+      <About/>
       <Education/>
       <Projects/>
       <Skills/>

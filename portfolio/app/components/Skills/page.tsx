@@ -43,7 +43,7 @@ export default function Skills() {
     >
       <div className="mb-10 flex items-center justify-between xl:mb-14">
         <h2
-          className="font-display text-3xl font-bold sm:text-4xl xl:text-5xl 2xl:text-6xl"
+          className="font-display text-3xl text-gray-400 font-bold sm:text-4xl xl:text-5xl 2xl:text-6xl"
           style={{ color: PAGE_BG }}
         >
           Skills
@@ -58,7 +58,7 @@ export default function Skills() {
             style={{ backgroundColor: PAGE_BG, borderColor: PAGE_BG }}
           >
             <p
-              className="font-mono text-xs font-bold uppercase tracking-[0.2em] xl:text-sm"
+              className="font-mono text-xs font-bold text-gray-400 uppercase tracking-[0.2em] xl:text-sm"
               style={{ color: CONTACT_BLUE }}
             >
               {category.title}
@@ -68,10 +68,9 @@ export default function Skills() {
               {category.skills.map((skill) => (
                 <span
                   key={skill}
-                  className="rounded-full px-3.5 py-1.5 font-body text-xs xl:px-4 xl:py-2 xl:text-sm"
+                  className="rounded-full px-3.5 py-1.5 text-gray-400 font-body text-xs xl:px-4 xl:py-2 xl:text-sm"
                   style={{
                     backgroundColor: "rgba(149, 193, 238, 0.12)",
-                    color: BRIDGERTON_BLUE,
                   }}
                 >
                   {skill}
