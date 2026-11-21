@@ -24,7 +24,7 @@ export default function Hero() {
               className="font-mono text-[10px] uppercase tracking-[0.18em] xs:text-xs sm:text-sm xl:text-base 2xl:text-lg"
               style={{ color: BRIDGERTON_BLUE }}
             >
-              Hi there,
+              Queen Carine here,
             </p>
 
             <h1 className="mt-1.5 font-display text-[1.75rem] font-semibold leading-[1.08] text-white xs:text-[2rem] sm:mt-3 sm:text-[2.6rem] md:text-5xl lg:text-[3.7rem] xl:text-[4.5rem] 2xl:text-[5.5rem]">

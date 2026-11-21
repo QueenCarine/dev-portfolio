@@ -1,65 +1,64 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
-  { label: "Education", href: "#educate" },
-  { label: "Projects", href: "#projects" },
-  { label: "Skills", href: "#skills" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", ids: ["home"] },
+  { label: "About", ids: ["about", "about-more"] },
+  { label: "Education", ids: ["educate"] },
+  { label: "Projects", ids: ["projects"] },
+  { label: "Skills", ids: ["skills"] },
+  { label: "Contact", ids: ["contact"] },
 ];
 
 const PAGE_BG = "#0d151d";
 const BRIDGERTON_BLUE = "#1a538c";
 
+const PILL_STYLE = {
+  backgroundColor: "white",
+  borderColor: "#243342",
+  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.25)",
+};
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState("#home");
+  const [active, setActive] = useState("");
+
+  const lockRef = useRef(false);
+  const idleRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const sections = navLinks
-      .map((link) => document.getElementById(link.href.slice(1)))
-      .filter((section): section is HTMLElement => section !== null);
-
-    if (sections.length === 0) return;
-
-    
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleSections = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort(
-            (a, b) =>
-              Math.abs(a.boundingClientRect.top) -
-              Math.abs(b.boundingClientRect.top)
-          );
-
-        if (visibleSections.length > 0) {
-          const currentSection = visibleSections[0].target as HTMLElement;
-
-          setActive(`#${currentSection.id}`);
-        }
-      },
-      {
-        rootMargin: "-20% 0px -55% 0px",
-        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
-      }
+    const entries = navLinks.flatMap((link) =>
+      link.ids
+        .map((id) => document.getElementById(id))
+        .filter((el): el is HTMLElement => el !== null)
+        .map((el) => ({ el, label: link.label }))
     );
 
-    sections.forEach((section) => observer.observe(section));
+    if (entries.length === 0) return;
+
     const handleScroll = () => {
+      if (lockRef.current) {
+        if (idleRef.current) clearTimeout(idleRef.current);
+        idleRef.current = setTimeout(() => {
+          lockRef.current = false;
+        }, 150);
+        return;
+      }
+
       const navbarOffset = 120;
 
-      let currentSection = sections[0];
+      const sorted = [...entries].sort(
+        (a, b) =>
+          a.el.getBoundingClientRect().top - b.el.getBoundingClientRect().top
+      );
 
-      for (const section of sections) {
-        const rect = section.getBoundingClientRect();
+      let current: (typeof entries)[number] | null = null;
 
-        if (rect.top <= navbarOffset) {
-          currentSection = section;
+      for (const entry of sorted) {
+        if (entry.el.getBoundingClientRect().top <= navbarOffset) {
+          current = entry;
         }
       }
 
@@ -67,74 +66,60 @@ export default function Navbar() {
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight - 5;
 
-      if (atBottom) {
-        currentSection = sections[sections.length - 1];
-      }
+      if (atBottom) current = sorted[sorted.length - 1];
 
-      setActive(`#${currentSection.id}`);
+      setActive(current ? current.label : "");
+    };
+
+    const unlock = () => {
+      lockRef.current = false;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-
-   
+    window.addEventListener("wheel", unlock, { passive: true });
+    window.addEventListener("touchmove", unlock, { passive: true });
+    window.addEventListener("keydown", unlock);
     handleScroll();
 
     return () => {
-      observer.disconnect();
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("wheel", unlock);
+      window.removeEventListener("touchmove", unlock);
+      window.removeEventListener("keydown", unlock);
+      if (idleRef.current) clearTimeout(idleRef.current);
     };
   }, []);
 
-  const handleNavClick = (href: string) => {
-    setActive(href);
+  const handleNavClick = (label: string) => {
+    lockRef.current = true;
+    setActive(label);
     setOpen(false);
   };
 
   return (
-    <header
-      className="sticky top-0 z-30 w-full border-b backdrop-blur-md"
-      style={{
-        backgroundColor: "white",
-        borderColor: "#243342",
-      }}
-    >
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-3 py-3 sm:px-5 sm:py-4 lg:px-6 lg:py-5">
-        <a
-          href="#home"
-          onClick={() => handleNavClick("#home")}
-          className="flex items-center tracking-wide"
+    <header className="sticky top-0 z-30 flex justify-center px-4 py-4">
+      <nav className="relative w-full max-w-fit">
+        {/* Desktop pill */}
+        <ul
+          className="hidden items-center gap-1.5 rounded-full border px-3 py-2.5 backdrop-blur-md lg:flex"
+          style={PILL_STYLE}
         >
-          <span
-            className="text-sm font-semibold sm:text-base md:text-lg lg:text-xl"
-            style={{ color: BRIDGERTON_BLUE }}
-          >
-            Queen Carine Portfolio
-          </span>
-        </a>
-
-        <ul className="hidden items-center gap-1.5 md:gap-2 lg:flex xl:gap-3">
           {navLinks.map((link) => {
-            const isActive = active === link.href;
-
+            const isActive = active === link.label;
             return (
               <li key={link.label}>
                 <a
-                  href={link.href}
-                  onClick={() => handleNavClick(link.href)}
-                  className="rounded-md border px-2.5 py-1.5 text-xs font-medium transition-all duration-300 md:px-3 md:text-sm lg:px-3.5 lg:py-1.5"
+                  href={`#${link.ids[0]}`}
+                  onClick={() => handleNavClick(link.label)}
+                  className="block rounded-full px-6 py-2.5 text-base font-medium transition-all duration-300"
                   style={
                     isActive
                       ? {
                           color: "white",
                           backgroundColor: BRIDGERTON_BLUE,
-                          borderColor: BRIDGERTON_BLUE,
                           boxShadow: "0 4px 12px rgba(26, 83, 140, 0.2)",
                         }
-                      : {
-                          color: BRIDGERTON_BLUE,
-                          backgroundColor: "transparent",
-                          borderColor: "transparent",
-                        }
+                      : { color: BRIDGERTON_BLUE }
                   }
                 >
                   {link.label}
@@ -144,63 +129,69 @@ export default function Navbar() {
           })}
         </ul>
 
-        <button
-          type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-md transition-colors duration-150 hover:bg-blue-50 active:bg-blue-100 lg:hidden"
-          onClick={() => setOpen((value) => !value)}
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          aria-controls="mobile-navigation"
-        >
-          {open ? (
-            <X size={24} style={{ color: BRIDGERTON_BLUE }} />
-          ) : (
-            <Menu size={24} style={{ color: BRIDGERTON_BLUE }} />
-          )}
-        </button>
+        {/* Mobile pill */}
+        <div className="lg:hidden">
+          <div
+            className="flex items-center justify-between gap-6 rounded-full border py-2.5 pl-6 pr-2.5 backdrop-blur-md"
+            style={PILL_STYLE}
+          >
+            <span
+              className="text-base font-medium"
+              style={{ color: BRIDGERTON_BLUE }}
+            >
+              Menu
+            </span>
+            <button
+              type="button"
+              className="flex h-10 w-10 items-center justify-center rounded-full transition-colors duration-150 hover:bg-blue-50 active:bg-blue-100"
+              onClick={() => setOpen((v) => !v)}
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="mobile-navigation"
+            >
+              {open ? (
+                <X size={20} style={{ color: BRIDGERTON_BLUE }} />
+              ) : (
+                <Menu size={20} style={{ color: BRIDGERTON_BLUE }} />
+              )}
+            </button>
+          </div>
+
+          <div
+            id="mobile-navigation"
+            className="absolute left-0 right-0 top-full mt-2 overflow-hidden rounded-3xl transition-all duration-300 ease-in-out"
+            style={{
+              backgroundColor: PAGE_BG,
+              border: open ? "1px solid #243342" : "0px solid transparent",
+              maxHeight: open ? "400px" : "0px",
+              opacity: open ? 1 : 0,
+            }}
+          >
+            <ul className="space-y-1 p-2">
+              {navLinks.map((link) => {
+                const isActive = active === link.label;
+                return (
+                  <li key={link.label}>
+                    <a
+                      href={`#${link.ids[0]}`}
+                      onClick={() => handleNavClick(link.label)}
+                      className="block rounded-full px-4 py-3 text-center text-base font-medium transition-all duration-300"
+                      style={{
+                        color: "white",
+                        backgroundColor: isActive
+                          ? BRIDGERTON_BLUE
+                          : "transparent",
+                      }}
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
       </nav>
-
-      <div
-        id="mobile-navigation"
-        className="overflow-hidden border-t transition-all duration-300 ease-in-out lg:hidden"
-        style={{
-          backgroundColor: PAGE_BG,
-          borderColor: "#243342",
-          maxHeight: open ? "400px" : "0px",
-          opacity: open ? 1 : 0,
-        }}
-      >
-        <ul className="space-y-1 px-4 py-3 sm:px-6 sm:py-4">
-          {navLinks.map((link) => {
-            const isActive = active === link.href;
-
-            return (
-              <li key={link.label}>
-                <a
-                  href={link.href}
-                  onClick={() => handleNavClick(link.href)}
-                  className="block rounded-md border px-4 py-3 text-sm font-medium transition-all duration-300 sm:py-2.5"
-                  style={
-                    isActive
-                      ? {
-                          color: "white",
-                          backgroundColor: BRIDGERTON_BLUE,
-                          borderColor: BRIDGERTON_BLUE,
-                        }
-                      : {
-                          color: "white",
-                          backgroundColor: "transparent",
-                          borderColor: "transparent",
-                        }
-                  }
-                >
-                  {link.label}
-                </a>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
     </header>
   );
 }

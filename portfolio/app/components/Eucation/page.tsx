@@ -18,6 +18,9 @@ const EDUCATION: EducationEntry[] = [
     dateRange: "[May 2026] – [May 2029]",
     tags: [
       "Data Structures & Algorithms",
+      "Linux and IT Tools",
+      "Python Programming",
+      "Databases",
       "Software Design",
       "Database Systems",
       "Web Development"

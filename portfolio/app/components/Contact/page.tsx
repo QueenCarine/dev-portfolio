@@ -10,7 +10,7 @@ type ContactMethod = {
 
 const CONTACT_METHODS: ContactMethod[] = [
   {
-    label: "Personal email",
+    label: "Email",
     value: "queencarineh@gmail.com",
     url: "mailto:queencarineh@gmail.com",
     icon: "email",
@@ -120,7 +120,7 @@ export default function Contact() {
       </h2>
 
       <p className="mt-3 max-w-xl font-body text-sm text-gray-500 sm:text-base xl:mt-4 xl:text-lg">
-        Reach out to connect, collaborate, or learn more about my background.
+        Open to new opportunities. Let’s talk before my calendar fills up.
       </p>
 
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:mt-14 xl:gap-6">
