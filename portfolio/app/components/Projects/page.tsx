@@ -1,5 +1,10 @@
-const PAGE_BG = "#0d151d";
+"use client";
+
+import Image from "next/image";
+import { useState } from "react";
+
 const CONTACT_BLUE = "#5B8DB8";
+const ACCENT = "#95c1ee";
 
 type ProjectLink = {
   label: string;
@@ -9,24 +14,41 @@ type ProjectLink = {
 type ProjectEntry = {
   name: string;
   year: string;
+  tagline: string;
+  impact: string;
   gradientFrom: string;
   gradientTo: string;
   watermark: string;
+  image?: string;
   icons: string[];
+  liveLabel: string;
+  liveUrl: string;
+  designLabel: string;
+  designUrl: string;
   description: string;
   bullets: string[];
   stack: string[];
   links?: ProjectLink[];
 };
 
+const TABS = ["Tech-Stack", "Approach","Resources"] as const;
+type Tab = (typeof TABS)[number];
+
 const PROJECTS: ProjectEntry[] = [
   {
     name: "CoopConnect",
     year: "2025",
+    tagline: "Training management for agricultural cooperatives",
+    impact:
+      "Helping cooperative administrators schedule and manage farmer training with ease.",
     gradientFrom: "#1c3a52",
     gradientTo: "#5B8DB8",
     watermark: "C",
     icons: ["Dj", "Rx", "Fg", "Mp", "CI"],
+    liveLabel: "View live project",
+    liveUrl: "https://coopconnect-react-app.vercel.app/",
+    designLabel: "API",
+    designUrl: "https://mind-maps-backend-1s8o.onrender.com/api/",
     description:
       "CoopConnect is a platform designed to empower agricultural cooperatives by enabling cooperative administrators to schedule and manage farmer training.",
     bullets: [
@@ -54,10 +76,17 @@ const PROJECTS: ProjectEntry[] = [
   {
     name: "KukuKonnect",
     year: "2025",
+    tagline: "Smart climate control for chicken coops",
+    impact:
+      "Helping farmers reduce losses and increase profitability by preventing thermal stress.",
     gradientFrom: "#0d151d",
     gradientTo: "#95c1ee",
     watermark: "K",
     icons: ["Dj", "ESP", "MQ", "Nx", "Ve"],
+    liveLabel: "View live project",
+    liveUrl: "https://kukukonnect-frontend.vercel.app/",
+    designLabel: "API",
+    designUrl: "https://kukukonnect-backend.onrender.com/api/",
     description:
       "A three-in-one IoT device that automatically regulates temperature and humidity in chicken coops to prevent thermal stress, helping farmers reduce losses, boost operational efficiency, and increase overall profitability.",
     bullets: [
@@ -73,13 +102,7 @@ const PROJECTS: ProjectEntry[] = [
       "Implemented automated testing within the CI/CD pipeline using Postman for API automation to enhance code quality and accelerate release cycles.",
       "Developed a Progressive Web Application (PWA) using Next.js, incorporating service workers and web app manifests to provide fast, reliable user experiences across devices.",
     ],
-    stack: [
-      "Django",
-      "ESP32",
-      "MQTT / HiveMQ",
-      "Next.js",
-      "Vercel",
-    ],
+    stack: ["Django", "ESP32", "MQTT / HiveMQ", "Next.js", "Vercel"],
     links: [
       { label: "Research Report", url: "https://docs.google.com/document/d/1mquhBptNwzMetF2R2kf2PakB2BhdZRiDgR_USCzQq2w/edit?usp=sharing" },
       { label: "Product Requirements Document (PRD)", url: "https://docs.google.com/document/d/1NAr6T8CpOmH4TWVVuOZVnX9hfHuFtmxZGaH0R3DEBRM/edit?usp=sharing" },
@@ -93,135 +116,215 @@ const PROJECTS: ProjectEntry[] = [
   },
 ];
 
-export default function Projects() {
+function ProjectCard({ project }: { project: ProjectEntry }) {
+  const [tab, setTab] = useState<Tab>("Tech-Stack");
+
   return (
-    <section
-      id="projects"
-      className="relative mx-auto max-w-7xl bg-[#0d151d] px-6 py-16 sm:px-10 lg:px-16 xl:max-w-[90rem] xl:px-20 xl:py-24 2xl:max-w-[110rem] 2xl:px-28"
+    <article
+      className="overflow-hidden rounded-[1.5rem] border p-4 sm:rounded-[2rem] sm:p-6 xl:p-8"
+      style={{
+        borderColor: "#243342",
+        backgroundColor: "rgba(255, 255, 255, 0.03)",
+      }}
     >
-      <div className="mb-10 flex items-center justify-between xl:mb-14">
-        <h2 className="font-display text-3xl font-bold text-white sm:text-4xl xl:text-5xl 2xl:text-6xl">
-          Projects
-        </h2>
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:gap-8">
-        {PROJECTS.map((project) => (
-          <div
-            key={project.name}
-            className="overflow-hidden rounded-2xl border border-[#e5e5e5] bg-white xl:rounded-3xl"
-          >
-          
-            <div
-              className="relative flex min-h-[200px] flex-col justify-end overflow-hidden px-6 py-8 sm:px-8 sm:py-10 xl:px-10 xl:py-12"
-              style={{
-                background: `linear-gradient(135deg, ${project.gradientFrom}, ${project.gradientTo})`,
-              }}
+      <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr] lg:gap-10 xl:gap-14">
+        
+        <div
+          className="relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-2xl p-6 sm:min-h-[320px] sm:p-8 lg:min-h-full xl:rounded-3xl xl:p-10"
+          style={{
+            background: `linear-gradient(135deg, ${project.gradientFrom}, ${project.gradientTo})`,
+          }}
+        >
+          {project.image ? (
+            <Image
+              src={project.image}
+              alt={`${project.name} screenshots`}
+              fill
+              sizes="(max-width: 1024px) 100vw, 45vw"
+              className="object-contain p-6"
+            />
+          ) : (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -right-4 -top-8 select-none font-display text-[10rem] font-bold leading-none text-white/10 xl:text-[14rem]"
             >
+              {project.watermark}
+            </span>
+          )}
+
+          <div className="relative flex flex-wrap gap-2">
+            {project.icons.map((icon, i) => (
               <span
-                aria-hidden="true"
-                className="pointer-events-none absolute -right-4 -top-6 select-none font-display text-[9rem] font-bold leading-none text-white/10 xl:text-[11rem]"
+                key={`${project.name}-icon-${i}`}
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-[10px] font-semibold text-white xl:h-10 xl:w-10"
               >
-                {project.watermark}
+                {icon}
               </span>
+            ))}
+          </div>
+        </div>
 
-              <h3 className="relative font-display text-2xl font-bold text-white sm:text-3xl xl:text-4xl">
-                {project.name}
-              </h3>
+      
+        <div className="flex min-w-0 flex-col">
+          <h3 className="font-display text-3xl font-bold text-white xl:text-5xl">
+            {project.name}
+          </h3>
+          <p className="mt-2 font-body text-base text-gray-200 xl:text-xl">
+            {project.tagline}
+          </p>
 
-              <div className="relative mt-4 flex flex-wrap gap-2">
-                {project.icons.map((icon, i) => (
-                  <span
-                    key={`${project.name}-icon-${i}`}
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-[10px] font-semibold text-white xl:h-9 xl:w-9"
-                  >
-                    {icon}
-                  </span>
-                ))}
-              </div>
-            </div>
+          <p className="mt-4 font-body text-sm leading-relaxed text-gray-400 xl:text-base">
+            {project.description}
+          </p>
 
-            
-            <div className="px-6 py-6 sm:px-8 sm:py-8 xl:px-10 xl:py-10">
-              <h4 className="font-display text-lg font-semibold text-[#0d151d] sm:text-xl xl:text-2xl">
-                {project.name}
-              </h4>
+         
+          <div
+            className="mt-5 border-l-4 px-4 py-4 font-body text-sm leading-relaxed text-gray-200 xl:text-base"
+            style={{
+              borderColor: ACCENT,
+              backgroundColor: "rgba(149, 193, 238, 0.1)",
+            }}
+          >
+            <span className="font-semibold text-white">Impact: </span>
+            {project.impact}
+          </div>
 
-              <p className="mt-1 font-mono text-xs text-gray-500 xl:text-sm">
-                {project.year}
-              </p>
+        
+          <div
+            role="tablist"
+            className="mt-6 flex flex-wrap gap-x-6 gap-y-1 border-b"
+            style={{ borderColor: "#243342" }}
+          >
+            {TABS.map((t) => {
+              const isActive = tab === t;
+              return (
+                <button
+                  key={t}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setTab(t)}
+                  className="-mb-px border-b-2 pb-3 font-body text-sm font-medium transition-colors xl:text-base"
+                  style={{
+                    color: isActive ? ACCENT : "#9ca3af",
+                    borderColor: isActive ? ACCENT : "transparent",
+                  }}
+                >
+                  {t}
+                </button>
+              );
+            })}
+          </div>
 
-            
-              <p className="mt-4 font-body text-sm italic leading-relaxed text-gray-600 xl:text-base">
-                {project.description}
-              </p>
-
-            
-              <p className="mt-5 font-body text-sm font-semibold text-[#0d151d] xl:text-base">
-                Approach and Key Insights
-              </p>
-
-              <ul className="mt-3 flex flex-col gap-3 xl:mt-4 xl:gap-4">
-                {project.bullets.map((bullet, i) => (
-                  <li
-                    key={`${project.name}-bullet-${i}`}
-                    className="flex items-start gap-3 font-body text-sm leading-relaxed text-gray-600 xl:text-base"
-                  >
-                    <span
-                      aria-hidden="true"
-                      className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#5B8DB8]"
-                    />
-
-                    <span>{bullet}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-6 border-t border-[#e5e5e5] pt-5 xl:mt-8 xl:pt-6">
-                <p className="font-body text-sm font-semibold text-[#0d151d] xl:text-base">
-                  $ Stack
-                </p>
-
-                <div className="mt-3 flex flex-wrap gap-2.5 xl:mt-4 xl:gap-3">
+          
+          <div className="mt-6 min-h-[150px]">
+            {tab === "Tech-Stack" && (
+              <div>
+                <div className="flex flex-wrap gap-2.5">
                   {project.stack.map((tech) => (
                     <span
-                      key={`${project.name}-${tech}`}
-                      className="rounded-full border border-[#95c1ee]/35 bg-[#95c1ee]/10 px-3.5 py-1.5 font-body text-xs text-[#0d151d] xl:px-4 xl:py-2 xl:text-sm"
+                      key={`${project.name}-stack-${tech}`}
+                      className="border px-3.5 py-1.5 font-body text-xs text-white xl:text-sm"
+                      style={{ borderColor: "rgba(255, 255, 255, 0.7)" }}
                     >
                       {tech}
                     </span>
                   ))}
                 </div>
-              </div>
 
-              {project.links && project.links.length > 0 && (
-                <div className="mt-6 border-t border-[#e5e5e5] pt-5 xl:mt-8 xl:pt-6">
-                  <p className="rounded-md bg-[#0d151d] px-3 py-2 font-body text-xs font-semibold uppercase tracking-[0.15em] text-white xl:text-sm">
-                    Project Links
-                  </p>
-
-                  <ul className="mt-4 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
-                    {project.links.map((link) => (
-                      <li key={`${project.name}-${link.label}`}>
-                        <a
-                          href={link.url || "#"}
-                          target={link.url ? "_blank" : undefined}
-                          rel={
-                            link.url
-                              ? "noopener noreferrer"
-                              : undefined
-                          }
-                          className="font-body text-sm font-medium text-[#52525b] underline decoration-1 underline-offset-2 transition-opacity hover:opacity-70 xl:text-base"
-                        >
-                          {link.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center rounded-full px-6 py-3 font-body text-sm font-semibold text-black transition-transform duration-200 hover:-translate-y-0.5 xl:text-base"
+                    style={{ backgroundColor: ACCENT }}
+                  >
+                    {project.liveLabel}
+                  </a>
+                  <a
+                    href={project.designUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center rounded-full border px-6 py-3 font-body text-sm font-medium text-white transition-colors duration-200 hover:bg-white/10 xl:text-base"
+                    style={{ borderColor: "rgba(255, 255, 255, 0.45)" }}
+                  >
+                    {project.designLabel} ↗
+                  </a>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+
+            {tab === "Approach" && (
+              <ul className="flex max-h-[280px] flex-col gap-3 overflow-y-auto pr-2">
+                {project.bullets.map((bullet, i) => (
+                  <li
+                    key={`${project.name}-bullet-${i}`}
+                    className="flex items-start gap-3 font-body text-sm leading-relaxed text-gray-400 xl:text-base"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full"
+                      style={{ backgroundColor: CONTACT_BLUE }}
+                    />
+                    <span>{bullet}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+        
+
+            {tab === "Resources" &&
+              (project.links && project.links.length > 0 ? (
+                <ul className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
+                  {project.links.map((link) => (
+                    <li key={`${project.name}-${link.label}`}>
+                      <a
+                        href={link.url || "#"}
+                        target={link.url ? "_blank" : undefined}
+                        rel={link.url ? "noopener noreferrer" : undefined}
+                        className="group flex items-center justify-between gap-3 border-b py-3 font-body text-sm text-gray-300 transition-colors hover:text-white xl:text-base"
+                        style={{ borderColor: "#243342" }}
+                      >
+                        <span>{link.label}</span>
+                        <span
+                          aria-hidden="true"
+                          className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                          style={{ color: ACCENT }}
+                        >
+                          ↗
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="font-body text-sm text-gray-500">
+                  No resources yet.
+                </p>
+              ))}
           </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export default function Projects() {
+  return (
+    <section
+      id="projects"
+      className="relative mx-auto max-w-7xl scroll-mt-24 px-4 py-16 sm:px-6 lg:px-10 xl:max-w-[90rem] xl:px-14 xl:py-24 2xl:max-w-[110rem]"
+    >
+      <div className="mb-10 xl:mb-14">
+        <h2 className="mt-2 font-display text-3xl font-bold text-white sm:text-4xl xl:text-5xl 2xl:text-6xl">
+          Projects
+        </h2>
+      </div>
+
+      <div className="flex flex-col gap-8 xl:gap-12">
+        {PROJECTS.map((project) => (
+          <ProjectCard key={project.name} project={project} />
         ))}
       </div>
     </section>
