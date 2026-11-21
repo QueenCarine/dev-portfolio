@@ -18,20 +18,12 @@ const SKILLS: SkillCategory[] = [
   },
   {
     title: "Databases & Data",
-    skills: ["PostgreSQL", "MongoDB", "DBeaver", "Entity Relationship Design"],
+    skills: ["PostgreSQL", "MongoDB", "Entity Relationship Design"],
   },
   {
     title: "DevOps & Cloud",
     skills: ["CI/CD", "GitHub Actions", "Heroku", "Vercel", "Netlify"],
-  },
-  {
-    title: "Tools & Design",
-    skills: ["Figma", "Adobe Illustrator", "Onshape CAD", "Postman", "Jira", "ClickUp"],
-  },
-  {
-    title: "IoT & Hardware",
-    skills: ["ESP32", "MQTT / HiveMQ", "Sensor Integration"],
-  },
+  }
 ];
 
 export default function Skills() {

@@ -99,7 +99,6 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-30 flex justify-center px-4 py-4">
       <nav className="relative w-full max-w-fit">
-        {/* Desktop pill */}
         <ul
           className="hidden items-center gap-1.5 rounded-full border px-3 py-2.5 backdrop-blur-md lg:flex"
           style={PILL_STYLE}
@@ -129,7 +128,6 @@ export default function Navbar() {
           })}
         </ul>
 
-        {/* Mobile pill */}
         <div className="lg:hidden">
           <div
             className="flex items-center justify-between gap-6 rounded-full border py-2.5 pl-6 pr-2.5 backdrop-blur-md"
